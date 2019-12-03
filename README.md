@@ -20,7 +20,7 @@ The parameters supported until now are:
 - ip: IP Address of the redfish machine
 - api_user: The username set in the redfish machine.
 - api_key: The key of the previous user.
-- Types: Data that can be extracted from the redfish API, options here are: thermal, power and systems.
+- types: Data that can be extracted from the redfish API, options here are: thermal, power and systems.
 
 The output of the data will be set on the message variable. You can rescue the data and convert to a json with a simple json filter and then keep working on it:
 
