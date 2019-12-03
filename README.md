@@ -26,7 +26,6 @@ The output of the data will be set on the message variable. You can rescue the d
 
 ```sh
 filter {
-
   if [message] {
     json {
       source => [message]
