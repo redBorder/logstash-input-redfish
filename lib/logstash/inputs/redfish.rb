@@ -43,6 +43,7 @@ class LogStash::Inputs::Redfish < LogStash::Inputs::Base
   end
 
   def get_info_urls
+   @info_urls_retrieve = false
    # Retrieving URLs to query from the redfish server
    begin 
      data = query(query["v1"])
@@ -52,7 +53,7 @@ class LogStash::Inputs::Redfish < LogStash::Inputs::Base
      @urls[:thermal] = query(@urls[:chassis])["Thermal"]["@odata.id"]
      @info_urls_retrieve = true
    rescue => e
-     @logger.error("Redfish: cannot retrieve info urls #{@ip}")
+     @logger.error("Redfish: cannot retrieve info urls #{@ip} e = "+e.to_s)
    end
   end # def register
 

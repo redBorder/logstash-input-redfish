@@ -1,12 +1,12 @@
 Gem::Specification.new do |s|
   s.name = 'logstash-input-redfish'
-  s.version         = '1.0.4'
-  s.licenses = ['Apache License (2.0)']
-  s.summary = "This example input streams a string at a definable interval."
+  s.version         = '1.0.5'
+  s.licenses = ['GNU Affero General Public License']
+  s.summary = "Get data from redfish API."
   s.description     = "This gem is a Logstash plugin required to be installed on top of the Logstash core pipeline using $LS_HOME/bin/logstash-plugin install gemname. This gem is not a stand-alone program"
-  s.authors = ["Elastic"]
-  s.email = 'info@elastic.co'
-  s.homepage = "http://www.elastic.co/guide/en/logstash/current/index.html"
+  s.authors = ["redBorder"]
+  s.email = 'manegron@redborder.com'
+  s.homepage = "https://www.redborder.com"
   s.require_paths = ["lib"]
 
   # Files
