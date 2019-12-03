@@ -41,7 +41,7 @@ filter {
 #### Code
 - To get started, you'll need JRuby with the Bundler gem installed.
 
-- Clone from the GitHub [logstash-input-redfish](https://github.com/manegron/logstash-input-redfish.git)
+- Clone from the GitHub [logstash-input-redfish](https://github.com/redBorder/logstash-input-redfish)
 
 - Install dependencies
 ```sh
