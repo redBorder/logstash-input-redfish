@@ -11,8 +11,8 @@ Add the redfish input in your Logstash pipeline as follow:
 ```sh
   redfish {
     ip => "10.10.10.10"
-    api_user => "redborder"
-    api_key => "redborder"
+    api_user => "user"
+    api_key => "key"
     types => ["thermal", "power"]
   }
 ```
@@ -22,6 +22,19 @@ The parameters supported until now are:
 - api_key: The key of the previous user.
 - Types: Data that can be extracted from the redfish API, options here are: thermal, power and systems.
 
+The output of the data will be set on the message variable. You can rescue the data and convert to a json with a simple json filter and then keep working on it:
+
+```sh
+filter {
+
+  if [message] {
+    json {
+      source => [message]
+      target => "message"
+    }
+  }
+}
+```
 ## Developing
 
 ### 1. Plugin Developement and Testing
