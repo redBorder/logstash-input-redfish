@@ -5,6 +5,7 @@ require "stud/interval"
 require "socket" # for Socket.gethostname
 require "rest-client"
 require "json" 
+require 'base64'
 # Generate a repeating message.
 #
 # This plugin is intented only as an example.
@@ -30,16 +31,17 @@ class LogStash::Inputs::Redfish < LogStash::Inputs::Base
   public
 
   def query(slug="/redfish")
-    response = RestClient::Request.execute(:url => @url+slug, :method => :get, :verify_ssl => false, timeout: @timeout)
+    response = RestClient::Request.execute(:url => @url+slug, :method => :get, :verify_ssl => false, timeout: @timeout, :headers => {:Authorization => @auth})
     JSON.parse(response.body)
   end
 
   def register
    #Normalize types
    @types = @types.map(&:downcase).map(&:to_sym)
-   @url="https://#{@api_user}:#{@api_key}@#{@ip}"
+   @url="https://#{@ip}"
    @urls = Hash.new
    @info_urls_retrieve = false 
+   @auth = 'Basic ' + Base64.encode64( "#{@api_user}:#{@api_key}" ).chomp
   end
 
   def get_info_urls

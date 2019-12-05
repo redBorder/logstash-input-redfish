@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    logstash-input-redfish (1.0.2)
+    logstash-input-redfish (1.0.6)
       logstash-codec-plain
       logstash-core-plugin-api (>= 1.60, <= 2.99)
       rest-client

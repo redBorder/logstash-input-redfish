@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'logstash-input-redfish'
-  s.version         = '1.0.5'
+  s.version         = '1.0.6'
   s.licenses = ['GNU Affero General Public License']
   s.summary = "Get data from redfish API."
   s.description     = "This gem is a Logstash plugin required to be installed on top of the Logstash core pipeline using $LS_HOME/bin/logstash-plugin install gemname. This gem is not a stand-alone program"
