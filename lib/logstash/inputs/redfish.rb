@@ -49,7 +49,29 @@ class LogStash::Inputs::Redfish < LogStash::Inputs::Base
    # Retrieving URLs to query from the redfish server
    begin 
      data = query(query["v1"])
-     @urls[:systems] = query(data["Systems"]["@odata.id"])["Members"].first["@odata.id"]
+     @urls[:systems] = []
+     systems = query(data["Systems"]["@odata.id"])["Members"]
+     systems.each do |system|
+       @urls[:systems].push(system["@odata.id"])
+
+       processors = query(query(system["@odata.id"])["Processors"]["@odata.id"])["Members"]
+       processors.each do |processor|
+         @urls[:systems].push(processor["@odata.id"])
+       end if !processors.nil?
+
+       pcies = query(system["@odata.id"])["PCIeFunctions"]
+       pcies.each do |pcie|
+         @urls[:systems].push(pcie["@odata.id"])
+       end if !pcies.nil?
+
+       chassiss = query(data["Chassis"]["@odata.id"])["Members"]
+       chassiss.each do |chassis|
+         @urls[:systems].push(chassis["@odata.id"])
+       end if !chassiss.nil?
+
+     end
+     @logger.error("Redfish: urls that will be queried : #{@urls[:systems].to_s}")
+
      @urls[:chassis] = query(data["Chassis"]["@odata.id"])["Members"].first["@odata.id"]
      @urls[:power] = query(@urls[:chassis])["Power"]["@odata.id"]
      @urls[:thermal] = query(@urls[:chassis])["Thermal"]["@odata.id"]
@@ -60,19 +82,31 @@ class LogStash::Inputs::Redfish < LogStash::Inputs::Base
   end # def register
 
   def run(queue)
-    # we can abort the loop if stop? becomes truei
+    # we can abort the loop if stop? becomes true
     while !stop?    
       if @info_urls_retrieve 
         @types.each do |type|
           next unless @urls.key?type      
           begin 
-            response = query(@urls[type])
+            if @urls[type].kind_of?(Array)
+              @urls[type].each do |url|
+                response = query(url)
+                @codec.decode(response.to_json) do | event |
+                  decorate(event)
+                  event.set("ip", @ip)
+                  event.set("type",type)
+                  queue << event
+                end
+              end
+            else
+              response = query(@urls[type])
 
-            @codec.decode(response.to_json) do | event |
-              decorate(event)
-              event.set("ip", @ip)
-              event.set("type",type)
-              queue << event
+              @codec.decode(response.to_json) do | event |
+                decorate(event)
+                event.set("ip", @ip)
+                event.set("type",type)
+                queue << event
+              end
             end
          rescue => e
            @logger.error("Redfish could not retrieve data from ip #{@ip}") 
